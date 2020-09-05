@@ -23,7 +23,7 @@ export default function Home() {
         <meta property="og:title" content="Toby Christopher" />
         <meta property="og:description" content="Personal website of Toby Christoper (@ditschedev)." />
         <meta property="og:image" content={`https://ditsche.dev${twitterCard}`} />
-        <title>Toby Christopher</title>
+        <title>Toby Christopher - Developer @ditschedev</title>
         <meta name="description" content="Personal website of Toby Christoper (@ditschedev)." />
       </Head>
       <div className="pt-20">
@@ -76,7 +76,7 @@ export default function Home() {
             </p>
           </div>
           <div className="text-base leading-6 font-medium">
-            <Link href="/about">
+            <Link href="/blog">
               <a
                   className="text-primary-500 hover:text-primary-600"
                   aria-label="Go to my blog">

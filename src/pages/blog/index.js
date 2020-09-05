@@ -23,7 +23,7 @@ export default function Home() {
                 <meta property="og:title" content="Toby Christopher" />
                 <meta property="og:description" content="Personal website of Toby Christoper (@ditschedev)." />
                 <meta property="og:image" content={`https://ditsche.dev${twitterCard}`} />
-                <title>Toby Christopher</title>
+                <title>Blog - Toby Christopher</title>
                 <meta name="description" content="Personal website of Toby Christoper (@ditschedev)." />
             </Head>
             <div className="pt-6 pb-8 space-y-2 md:space-y-5">
