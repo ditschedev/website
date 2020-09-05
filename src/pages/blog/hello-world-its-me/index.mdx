@@ -1,0 +1,102 @@
+import { tobychristopher } from '@/authors'
+import image from './card.jpg'
+
+export const meta = {
+    title: 'Hello world, it\'s me',
+    description: `I finally finished creating my blog! But who am I? And what type of posts are coming in the next couple of weeks? In this article I want to introduce myself as a person and developer.`,
+    date: '2020-09-05T15:30:31Z',
+    authors: [tobychristopher],
+    image,
+    tags: ['spring boot', 'security'],
+    github: 'https://github.com/ditschedev/website',
+}
+
+Hey there, Toby here. I finally finished creating my blog! But who am I? And what type of posts are coming in the next couple of weeks?
+
+In this article I want to introduce myself as a person and developer.
+
+<!--more-->
+
+### TL:DR
+
+I learned many things in the past years, but I want to adopt to the new technologies out there. Therefor I want to write about security and best-
+practices in API design in my future posts, especially with Spring Boot and NextJS/NuxtJS.
+
+If you got any ideas for interesting articles or tutorials hit me up: <a href="mailto:hello@ditsche.dev">hello@ditsche.dev</a>!
+
+## Who am I?
+
+At the moment, just a stranger off the internet, I guess. But let's be serious. My name is Toby, and I am a computer science student living in Hamburg,
+Germany. I've always loved to write, worked on the school newspaper back in the days and kept writing down thoughts, ideas and other helpful information.
+
+When entering university, I already knew a lot of mechanisms, algorithms and frameworks. Because the lectures weren't challenging, nor interesting, I
+started reading blog posts regarding newest tech-stacks, mechanisms and approaches. I wanted to expand my horizon. So I started side projects. A lot of
+side projects. I am 20 now, and my side project graveyard is growing drastically.
+
+In the following sections I want to take you on my journey of learning how to code and maybe wake up memories or even motivate you to try it on your own.
+
+## Java
+
+I made my first experiences with programming back in 2013 whilst playing the online game [Minecraft](https://www.minecraft.net). I played on a single server
+every day after school with my friends. In school, we agreed on what time we will be online, to play together and build up our base (haven't had a smartphone
+back then). But that server went offline as many others in the coming years. Shortly after minigames became popular. Playing hunger games in Minecraft
+was a big deal. But to play those specific gamemodes you'd have to mod the game. That was possible using plugins.
+
+I started reading through Minecraft Plugin development and stumbled over [Craftbukkit](https://getbukkit.org/) and [Java](https://www.java.com).
+Craftbukkit is a popular server library with an easy to use API. Minecraft was developed in Java, so the plugins are simple Java modules following a
+strictly defined schema. I read the book [Java ist auch eine Insel](http://openbook.rheinwerk-verlag.de/javainsel/) (translates to "Java is an island too")
+and started working on my own minigames.
+
+I met a couple of Java devs at this time, worked with small dev teams on bigger servers and actually made some money doing this. It was a great time.
+But I wanted to improve. So I came across Webapps. At that time, Javascript and Node weren't as popular as today, so I started learning php.
+
+## PHP
+
+Next up I started learning [PHP](https://www.php.net). It was different coming from a strictly typed high level language as Java to the runtime dynamic PHP. But it worked out
+just fine, and I started creating webapps using frameworks like [Laravel](https://laravel.com/) and [Slim](http://www.slimframework.com/). Once I was pretty comfortable working with Laravel and PHP, I wanted
+to create my own framework. So I read into the lifecycle of applications and how the requests are processed. After that I started writing my own router.
+Though there were many router implementations available, I wanted to do it on my own. Not for use in production, but to understand the technology behind it.
+I think this is as important as writing clean and readable code.
+
+That was one of the first times I encountered databases. I worked with them in the past,
+but now its about Models and relationships instead of simple SQL queries.
+
+## Spring Boot
+
+Till this day I use and love [Spring Boot](https://spring.io/). It is super easy to use and understand. Is pretty powerfull and scaleable. Easy to
+containerize and deploy. Java is a powerfull language and strictly typed, so that there's no need of configuring the project to get types like with
+NodeJS and TypeScript.
+
+The Spring Boot framework has a vast community all over the world and dozens of libraries are available. It offers you authentication out of the box
+and keeps your code simple and clean. Testing with JUnit and AssertJ makes it even better.
+
+That's why I'm building the site [learn-spring.com](learn-spring.com)
+which will be a course platform of video tutorials for learning Spring Boot from scratch. It's not available at the moment, but I'll let you know when
+it launches.
+
+I played with other frameworks aswell. I liked using NodeJS with [Express](https://expressjs.com/) and [TypeScript](https://www.typescriptlang.org/).
+But none of them reached the efficiency I can achieve with Spring Boot.
+
+## Frontend frameworks
+
+Pretty late I discovered the true power of frontend frameworks like [Vue](https://vuejs.org/) or [React](https://reactjs.org/). Though I never really used
+them as standalone SPA's (Single Page Applications). I fell in love with [NuxtJS](https://nuxtjs.org/) which is powered by view and the React powered
+[NextJS](https://nextjs.org/). This blog is using NextJS and Markdown to provide this article btw.
+
+I started using Bootstrap and jQuery and had no idea how much pain I hab over the years. Building frontends should be easy. I also started using
+[TailwindCSS](https://tailwindcss.com/) as my CSS framework of choice. It is super easy to configure and you can use it intuitively. I love the utility-first
+approach the guys over at Tailwind follow and adopted it for my own work.
+
+## Summary
+
+I came a long way in a short period, and I am not close to an end. There is still so much to discover and learn, as there are new frameworks and improved runtimes
+released now and then. Shortly we got [Deno](https://deno.land/), a more secure alternative to NodeJS, made by the same guy how actually made Node.
+
+Security plays an important role in our modern society. We all want our data to be safe. All we as developers can do, is to follow the best-practices
+that have been developed, and think about new ones. Never use something, because "xy uses it". Understand your technology. Know what you are doing
+and why.
+
+That's it for me for today, hope you liked the read and see you in the next post.
+
+Cheers,
+Toby
