@@ -5,6 +5,10 @@
 @tailwind components;
 @tailwind utilities;
 
+.prose pre code::after, .prose pre code::before {
+    content: none;
+}
+
 a.nav-link {
     @apply relative transition transition-colors duration-300 ease-in-out pb-px
 }

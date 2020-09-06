@@ -1,0 +1,252 @@
+import { tobychristopher } from '@/authors'
+import image from './card.jpg'
+
+export const meta = {
+    title: 'Easy API request body Validation in Spring Boot',
+    description: `I finally finished creating my blog! But who am I? And what type of posts are coming in the next couple of weeks? In this article I want to introduce myself as a person and developer.`,
+    date: '2020-09-06T18:30:00Z',
+    authors: [tobychristopher],
+    image,
+    tags: ['spring boot', 'validation'],
+    github: 'https://github.com/ditschedev/website',
+}
+
+Validation can be tricky and though Spring Boot offers us a way to validate our incoming DTO's, it is not always the best fitting implementation. Thats why I created a simple Java validation library specifically
+for use within API's.
+
+Today we will look at this library, build a validator and see how we can return a failed validation to the frontend.
+
+<!--more-->
+
+## TL;DR
+If you only want to see the code, check out this [GitHub repository](#). But I would suggest to first give this post a read to really understand the mechanics of the validator.
+
+## Setting up the validator
+
+### Installing the dependencies
+
+First of we need to install the dependencies. Below you'll find the dependency for Maven users. If you are using Gradle you need to reformat the import.
+
+```xml
+<dependency>
+    <groupId>dev.ditsche</groupId>
+    <artifactId>validator</artifactId>
+    <version>2.2.0</version>
+</dependency>
+```
+
+After adding these lines into the `dependencies` sections in your `pom.xml` file, you need to run the following command in your terminal, if that is not already done by your IDE.
+
+```shell script
+mvn install
+```
+
+Now we are ready to create our first validator!
+
+### Creating the DTOs
+
+Before we configure our validator, we need to have a DTO that needs to be validated. To make it even better, we create two DTO's and nest one in the other. This way, nested object validation can be shown.
+So we want to create two DTO's. Imagine we build a ticketing system and want to record the customer and their ordered tickets.
+
+```java
+@NoArgsConstructor
+@Data
+public class TicketDTO {
+
+    /**
+     * The name of the event of the ticket.
+     */
+    private String eventName;
+
+    /**
+     * The price of one ticket in cents.
+     */
+    private long price;
+
+    /**
+     * The amount of tickets bought.
+     */
+    private int amount;
+
+}
+```
+
+And the Customer DTO:
+
+```java
+@NoArgsConstructor
+@Data
+public class CustomerDTO {
+
+    /**
+     * The full name of the customer.
+     */
+    private String fullName;
+
+    /**
+     * The age of the customer.
+     */
+    private int age;
+
+    /**
+     * The tickets of the customer.
+     */
+    private List<TicketDTO> tickets;
+
+}
+```
+
+### Configuring the validator
+
+Now we can configure our validator. To do so, we need to figure out which fields we want to validate. For simplicity reasons I went with some obvious validations. Those are the following:
+
+#### <u>Customer</u>
+- The customers **<u>name</u>** is **required** and is limited to **80 characters**. And it should be **alphanumeric** of course.
+- The customers **<u>age</u>** is **optional**.
+- The customer needs to have at least **one <u>ticket</u>**
+
+#### <u>Ticket</u>
+- The tickets **<u>event name</u>** is **required** and is limited to **60 characters**. (And again **alphanumeric**)
+- The tickets **<u>price</u>** is **required** and needs to be **greater or equal to 0**.
+- The tickets **<u>amount</u>** is **required** and needs to be **greater or equal to 1** but **smaller than 5**.
+
+Those rules given, we can create our validator as follows:
+
+```java
+Validator validator = Validator.fromRules(
+    string("fullName").required().max(80).alphanum(),
+    number("age").optional(),
+    array("tickets").min(1).objects(
+        string("eventName").required().max(60).alphanum(),
+        number("price").required().min(0),
+        number("amount").required().size(1, 4)
+    )
+);
+```
+
+**And thats it**, pretty easy, huh?
+
+Let's take this a step further. What if we want to **trim** the strings down before validation or want to define **default values**? No problem!
+
+We can add rules to our validator after we created it. But we want the trim rule to be one of the first rules to be executed as it alters the value of the field. So let's redefine our validator
+object:
+
+```java
+Validator validator = Validator.fromRules(
+    string("fullName").required().trim().max(80).alphanum(),
+    number("age").optional().defaultValue(18),
+    array("tickets").min(1).objects(
+        string("eventName").optional().trim().default("Gamescom").max(60).alphanum(),
+        number("price").required().min(0),
+        number("amount").required().size(1, 4)
+    )
+);
+```
+
+Now we changed the rules a little bit, but that helps us using most of the functionality of the validator. If you want to know all available methods, take a look at the [GitHub repository](https://github.com/ditschedev/validator).
+It is well documented over there. We only care about the fun part here!
+
+### Validating an object
+
+Validating an object is super easy. The intended use is to validate incoming DTOs. Inside your controller method, call the `validate` method of your validator instance and thats it.
+Here is an example controller method which provides an endpoint for saving a new customer to the database.
+
+```java
+@PostMapping("/")
+public ResponseEntity<?> createCustomer(@RequestBody CustomerDTO customerDTO) throws ValidationException {
+    customerDTO = validator.validate(customerDTO);
+
+    // Add your business logic here
+
+    return ResponseEntity.status(HTTPStatus.CREATED).body(
+        new ServiceResponse(true, "Customer created successfully")
+    );
+}
+```
+
+## Catching the exception with Spring Boot
+
+Spring Boot offers us a quick and easy way to handle exceptions and return responses based on those. All you need is a `ControllerAdvice` paired with the `ExceptionHandler` annotation. That annotation decorates
+a method returning a ResponseEntity which can return whatever you want. In our case, we want to catch the `ValidationException`, that is thrown, if the validation fails for at least one rule and return the
+resulting errors.
+
+To do this, we need a file `ValidationAdvice.java` which will be our advice and exception handler. The file will look something like this:
+
+```java
+@ControllerAdvice
+public class ValidationAdvice {
+
+    @ExceptionHandler(ValidationException.class)
+    @ResponseBody
+    public ResponseEntity<?> handleValidationErrors(ValidationException ex) {
+        return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(
+                new ServiceResponse(false, "Validation errors", ex.getErrors())
+        );
+    }
+
+}
+```
+
+Here we extract the errors off the `ValidationException` using the `getErrors()` method. This will give us errors in a nice format, so that we can return them directly to the client!
+
+The `ServiceResponse` is just a POJO that helps me to keep a structure for the API's responses. It might look like this:
+
+```java
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public class ServiceResponse implements Serializable {
+
+    @JsonProperty("success")
+    private boolean success;
+
+    @JsonProperty("message")
+    private String message;
+
+    @JsonProperty("data")
+    private Object data;
+
+    public ServiceResponse(boolean success, String message) {
+        this(success, message, null);
+    }
+
+}
+```
+
+Doing this, the application will return a json response with the errors once a validation fails. Automatically!
+
+The resulting json will look something like this, depending on your type of API responses.
+
+```json
+{
+  "success": false,
+  "message": "Validation errors",
+  "data": [
+    {
+      "field": "fullName",
+      "errors": [
+        {
+          "message": "The field \"fullName\" is required",
+          "errorType": "validation.error.format.required"
+        },
+        {
+          "message": "The field \"fullName\" needs to be alphanumeric",
+          "errorType": "validation.error.format.alphanum"
+        }
+      ]
+    }
+  ]
+}
+```
+
+## Conclusion
+
+We covered how to install the dependency using Maven, set up a validator for a DTO and how to return the validation errors back to the frontend. I hope you like the library and if there's anything I should or could
+change to make it better, make sure to create an issue over on the [GitHub repository](https://github.com/ditschedev/validator/issues).
+
+In the next posts we will cover authentication and security for Spring Boot API's. In detail, we will build a JWT-based authentication and device authentication with otp. Additionally I will show you how to send
+[MJML](https://mjml.io) formatted emails using Spring Boot.
+
+Cheers,
+Toby

@@ -17,6 +17,10 @@ const tokenClassNames = {
   function: 'text-code-blue',
   boolean: 'text-code-red',
   comment: 'text-gray-400 italic',
+  javadoc: 'text-gray-400 italic',
+  annotation: 'text-code-green',
+  field: 'text-code-blue',
+  'class-name': 'text-code-blue'
 }
 
 module.exports = withBundleAnalyzer({

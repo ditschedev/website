@@ -84,10 +84,10 @@ export default function Post({ meta, children, posts }) {
           </div>
           <div className="text-center xl:text-left">
             <dt className="sr-only">Tags</dt>
-            <dd className="space-x-2">
+            <dd className="space-x-2 space-y-2">
               {meta.tags.map(tag => {
                 return (
-                    <span
+                    <span key={tag}
                         className="inline-flex items-center px-2.5 py-0.5 rounded-md text-sm font-medium leading-5 bg-gray-100 text-gray-800">
                       {tag}
                     </span>
