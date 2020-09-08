@@ -14,9 +14,7 @@ export default function App({ Component, pageProps }) {
           <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#ea8c35" />
           <meta name="msapplication-TileColor" content="#da532c" />
           <meta name="theme-color" content="#ffffff" />
-          <script src="https://unpkg.com/@logowl/adapter-browser@2.3.0/dist/logowl-adapter-browser.js" crossorigin />
-
-          <script dangerouslySetInnerHTML={{__html: `window.logowl&&window.logowl.init({ticket:'17D8EF869669FDEB5A6D121A9F283C0D0014C2EAA638C1ECD7',sendAnalytics:!0})` }} />
+          <script async defer data-domain="ditsche.dev" src="https://plausible.io/js/plausible.js" />
       </Head>
       <SectionContainer>
         <Header />
