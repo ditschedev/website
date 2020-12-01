@@ -88,7 +88,7 @@ export default function Home() {
         <div className="xl:w-1/2 space-y-6">
           {posts.slice(0, 3).map(({ link, module: { default: Component, meta } }) => {
             return (
-                <div className="flex space-x-6">
+                <div key={link} className="flex space-x-6">
                   <dl className="inline-block">
                     <dt className="sr-only">Published on</dt>
                     <dd className="text-sm leading-6 font-medium text-gray-500">
