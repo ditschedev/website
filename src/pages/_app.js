@@ -14,7 +14,7 @@ export default function App({ Component, pageProps }) {
           <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#ea8c35" />
           <meta name="msapplication-TileColor" content="#da532c" />
           <meta name="theme-color" content="#ffffff" />
-          <script async defer data-domain="ditsche.dev" src="https://plausible.io/js/plausible.js" />
+          <script async defer data-domain="ditsche.dev" src="https://stats.ditsche.dev/js/plausible.js" />
       </Head>
       <SectionContainer>
         <Header />
