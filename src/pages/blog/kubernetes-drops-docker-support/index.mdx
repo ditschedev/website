@@ -1,0 +1,53 @@
+import { tobychristopher } from '@/authors'
+import image from './card.jpg'
+
+export const meta = {
+    title: 'Kubernetes deprecates Docker - What now?',
+    description: ``,
+    date: '2020-12-06T18:30:31Z',
+    authors: [tobychristopher],
+    image,
+    tags: ['kubernetes', 'docker'],
+    github: 'https://github.com/ditschedev/website',
+}
+
+When Kubernetes announced, that they will be deprecating Docker as a container runtime after v1.20, there were many folks freaking out over this. But actually, it doesn't matter. Why, you may ask?
+
+Lets clear this confusion and see, why we can still develop and deploy applications, as we used to do. Don't panic.
+
+<!--more-->
+
+Docker as an underlying runtime will be deprecated in favor of the [Container Runtime Interface (CRI)](https://kubernetes.io/blog/2016/12/container-runtime-interface-cri-in-kubernetes/), which was
+explicitly created for Kubernetes. End users of Kubernetes clusters won't notice any difference as images built with `docker build` will still be able to run on
+your updated Kubernetes cluster without a problem.
+
+## But why the panic?
+Most people just read the following headline:
+
+> Kubernetes is deprecating Docker as a container runtime after v1.20.
+
+but didn't think about it. It only says, that the runtime will be deprecated. This is the environment inside of Kubernetes responsible for pulling and running the
+images. [Docker](https://www.docker.com/) is a popular runtime for developers (other common runtimes are [CRI-O](https://cri-o.io/) or [containerd](https://containerd.io/)), because it offers a lot of UX enhancements. This is pretty neat for developers, but inefficient for Kubernetes
+as it's not human.
+
+Actually, Docker is build upon [containerd](https://containerd.io/), which is a high-level container runtime by itself. Because Docker is just an abstraction of containerd, Kubernetes
+relies on a tool called [Dockershim](https://godoc.org/k8s.io/kubernetes/pkg/kubelet/dockershim) in order to get to the containerd layer of the docker runtime.
+So yelling **Docker is beeing deprecated** is not quite right. What will be removed is Dockershim and implicitly with it, the support for the Docker runtime.
+
+## What will change?
+Well, for most of us, nothing will change. As said, we talk about two different environments. You will still download, install and use Docker the way you used it before.
+Why can we do that, as Kubernetes drops Docker as a runtime?
+
+Well images produced by Docker are not docker-specific. They follow the [Open Container Interface (OCI)](https://opencontainers.org/) standard. And thats great, cause any
+OCI-compliant image will run just as good in containerd or CRI-O. Both know how to pull and run them.
+
+### Important notice
+If you are using the docker socket actively as part of your workflow on your cluster today (also called Docker in Docker or dind), moving to a different runtime will break your functionality.
+To prevent functionality breaking, you should take a look at the following options like [kaniko](https://github.com/GoogleContainerTools/kaniko), [img](https://github.com/genuinetools/img) and [buildah](https://github.com/containers/buildah).
+
+## Conclusion
+End users of Kubernetes won't notice much of a difference in the way they use or interact with their cluster. Only, if you relied on some docker-specific functionality,
+such as the docker socket or in general the docker runtime, some adaption is needed. Docker can still be used in development and the produced images can still be
+deployed to production on your Kubernetes cluster.
+
+Be grateful for the simplicity orchestration has brought to us and how they keep it reliable. And as said: **Don't panic. It's not as dramatic as it sounds!**
